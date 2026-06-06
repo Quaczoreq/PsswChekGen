@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Password Strength Checker</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="primary-panel">
+      <div id="successTick" class="success-tick" aria-hidden="true">
+        <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true">
+          <path d="M5 13l4 4L19 7"></path>
+        </svg>
+        <span>Strong password</span>
+      </div>
+
+      <section class="card">
+        <h1>Password Strength Checker</h1>
+        <p>Check whether a password has enough length, uppercase and lowercase letters, numbers, and special characters.</p>
+
+        <label for="password">Enter a password</label>
+        <div class="input-row">
+          <input id="password" type="password" placeholder="Type your password here" autocomplete="new-password" />
+          <button type="button" onclick="checkPasswordStrength()">Check</button>
+        </div>
+
+        <section class="result" aria-live="polite">
+          <div id="score" class="score">Password strength: 0/5</div>
+          <ul id="feedback">
+            <li>At least 8 characters</li>
+            <li>At least 1 uppercase letter</li>
+            <li>At least 1 lowercase letter</li>
+            <li>At least 1 number</li>
+            <li>At least 1 special character</li>
+          </ul>
+          <div class="hint">Tip: press Enter after typing your password.</div>
+        </section>
+        <div class="credit-line">Pythone code used for this card has been created by <a href="https://github.com/Scott1017/Password-Strength-Checker" target="_blank" rel="noopener noreferrer">Scott Rayner</a></div>
+      </section>
+    </section>
+
+    <section class="card">
+      <h2>Password Crack-Time Calculator</h2>
+      <p>Uses the password above to estimate how long a brute-force attack could take. This is a rough offline estimate.</p>
+
+      <div class="crack-output" aria-live="polite">
+        <div id="crackEstimate" class="estimate-value">Enter a password to see an estimate</div>
+        <div id="crackDetails" class="estimate-note">Assumes about 10 billion guesses per second.</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Strong Password Generator</h2>
+      <p>Generate a strong random password and copy it with one click.</p>
+
+      <div class="control-row">
+        <label for="passwordLength">Length</label>
+        <input id="passwordLength" type="number" min="12" max="32" value="16" />
+        <button type="button" class="secondary-button" onclick="generateStrongPassword()">Generate</button>
+      </div>
+
+      <div class="generate-row">
+        <input id="generatedPassword" type="text" readonly />
+        <button type="button" onclick="copyGeneratedPassword()">Copy</button>
+      </div>
+
+      <div id="copyStatus" class="copy-status" aria-live="polite"></div>
+      <div class="small-note">Includes uppercase, lowercase, numbers, and symbols.</div>
+    </section>
+  </main>
+
+  <script>
+    const GUESSES_PER_SECOND = 1e10;
+    const LOWER_CHARS = "abcdefghijklmnopqrstuvwxyz";
+    const UPPER_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const DIGIT_CHARS = "0123456789";
+    const SYMBOL_CHARS = "!@#$%^&*()-_=+[]{}|;:,.<>?/";
+
+    const requirements = [
+      {
+        label: "At least 8 characters",
+        test: (password) => password.length >= 8,
+      },
+      {
+        label: "At least 1 uppercase letter",
+        test: (password) => /[A-Z]/.test(password),
+      },
+      {
+        label: "At least 1 lowercase letter",
+        test: (password) => /[a-z]/.test(password),
+      },
+      {
+        label: "At least 1 number",
+        test: (password) => /\d/.test(password),
+      },
+      {
+        label: "At least 1 special character",
+        test: (password) => /[!@#$^%&*(),.?":{}<>]/.test(password),
+      },
+    ];
+
+    const passwordInput = document.getElementById("password");
+    const scoreElement = document.getElementById("score");
+    const feedbackElement = document.getElementById("feedback");
+    const successTick = document.getElementById("successTick");
+    const crackEstimateElement = document.getElementById("crackEstimate");
+    const crackDetailsElement = document.getElementById("crackDetails");
+    const generatedPasswordInput = document.getElementById("generatedPassword");
+    const passwordLengthInput = document.getElementById("passwordLength");
+    const copyStatusElement = document.getElementById("copyStatus");
+
+    function getCharacterSetSize(password) {
+      let charsetSize = 0;
+
+      if (/[a-z]/.test(password)) {
+        charsetSize += 26;
+      }
+
+      if (/[A-Z]/.test(password)) {
+        charsetSize += 26;
+      }
+
+      if (/\d/.test(password)) {
+        charsetSize += 10;
+      }
+
+      if (/[^A-Za-z0-9\s]/.test(password)) {
+        charsetSize += 33;
+      }
+
+      if (/\s/.test(password)) {
+        charsetSize += 1;
+      }
+
+      return charsetSize;
+    }
+
+    function formatDurationFromLog10Seconds(log10Seconds) {
+      const units = [
+        { label: "second", seconds: 1 },
+        { label: "minute", seconds: 60 },
+        { label: "hour", seconds: 3600 },
+        { label: "day", seconds: 86400 },
+        { label: "year", seconds: 31557600 },
+        { label: "century", seconds: 3155760000 },
+      ];
+
+      let selectedUnit = units[0];
+
+      for (const unit of units) {
+        if (log10Seconds >= Math.log10(unit.seconds)) {
+          selectedUnit = unit;
+        }
+      }
+
+      const log10Value = log10Seconds - Math.log10(selectedUnit.seconds);
+
+      if (log10Value < 6) {
+        const numericValue = Math.max(1, Math.round(10 ** log10Value));
+        const label = numericValue === 1 ? selectedUnit.label : `${selectedUnit.label}s`;
+        return `${numericValue.toLocaleString()} ${label}`;
+      }
+
+      return `10^${log10Value.toFixed(1)} ${selectedUnit.label}s`;
+    }
+
+    function updateCrackEstimate() {
+      const password = passwordInput.value;
+
+      if (!password) {
+        crackEstimateElement.textContent = "Enter a password to see an estimate";
+        crackDetailsElement.textContent = "Assumes about 10 billion guesses per second.";
+        return;
+      }
+
+      const charsetSize = getCharacterSetSize(password);
+
+      if (charsetSize === 0) {
+        crackEstimateElement.textContent = "Unable to estimate this password";
+        crackDetailsElement.textContent = "Add letters, numbers, or symbols to estimate cracking time.";
+        return;
+      }
+
+      const log10Seconds = password.length * Math.log10(charsetSize) - Math.log10(2) - Math.log10(GUESSES_PER_SECOND);
+      crackEstimateElement.textContent = log10Seconds < 0 ? "Less than a second" : `About ${formatDurationFromLog10Seconds(log10Seconds)}`;
+      crackDetailsElement.textContent = `Based on a ${charsetSize}-character set and about 10 billion guesses per second.`;
+    }
+
+    function checkPasswordStrength() {
+      const password = passwordInput.value;
+      let score = 0;
+
+      const items = Array.from(feedbackElement.querySelectorAll("li"));
+
+      requirements.forEach((requirement, index) => {
+        const passed = requirement.test(password);
+        if (passed) {
+          score += 1;
+        }
+        items[index].classList.toggle("pass", passed);
+        items[index].classList.toggle("fail", !passed);
+      });
+
+      scoreElement.textContent = `Password strength: ${score}/5`;
+      scoreElement.className = "score";
+
+      if (score >= 4) {
+        scoreElement.classList.add("good");
+      } else if (score >= 2) {
+        scoreElement.classList.add("medium");
+      } else {
+        scoreElement.classList.add("weak");
+      }
+
+      successTick.classList.toggle("visible", score === 5);
+      updateCrackEstimate();
+    }
+
+    function updatePasswordAnalysis() {
+      checkPasswordStrength();
+    }
+
+    passwordInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        checkPasswordStrength();
+      }
+    });
+
+    passwordInput.addEventListener("input", updatePasswordAnalysis);
+
+    function getRandomCharacter(characters) {
+      const randomValues = new Uint32Array(1);
+      window.crypto.getRandomValues(randomValues);
+      return characters[randomValues[0] % characters.length];
+    }
+
+    function shuffleCharacters(characters) {
+      for (let index = characters.length - 1; index > 0; index -= 1) {
+        const randomValues = new Uint32Array(1);
+        window.crypto.getRandomValues(randomValues);
+        const swapIndex = randomValues[0] % (index + 1);
+        [characters[index], characters[swapIndex]] = [characters[swapIndex], characters[index]];
+      }
+    }
+
+    function generateStrongPassword() {
+      const requestedLength = passwordLengthInput.valueAsNumber;
+      const passwordLength = Math.min(32, Math.max(12, Number.isFinite(requestedLength) ? requestedLength : 16));
+      const allCharacters = LOWER_CHARS + UPPER_CHARS + DIGIT_CHARS + SYMBOL_CHARS;
+      const generatedCharacters = [
+        getRandomCharacter(LOWER_CHARS),
+        getRandomCharacter(UPPER_CHARS),
+        getRandomCharacter(DIGIT_CHARS),
+        getRandomCharacter(SYMBOL_CHARS),
+      ];
+
+      while (generatedCharacters.length < passwordLength) {
+        generatedCharacters.push(getRandomCharacter(allCharacters));
+      }
+
+      shuffleCharacters(generatedCharacters);
+
+      const generatedPassword = generatedCharacters.join("");
+      generatedPasswordInput.value = generatedPassword;
+      copyStatusElement.textContent = "";
+      return generatedPassword;
+    }
+
+    async function copyGeneratedPassword() {
+      const password = generatedPasswordInput.value || generateStrongPassword();
+
+      try {
+        await navigator.clipboard.writeText(password);
+        copyStatusElement.textContent = "Copied to clipboard.";
+      } catch {
+        generatedPasswordInput.focus();
+        generatedPasswordInput.select();
+
+        const copied = document.execCommand("copy");
+        copyStatusElement.textContent = copied ? "Copied to clipboard." : "Copy failed. Please copy manually.";
+      }
+    }
+
+    generateStrongPassword();
+    updateCrackEstimate();
+    checkPasswordStrength();
+  </script>
+</body>
+</html>
