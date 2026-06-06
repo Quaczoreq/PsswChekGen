@@ -8,68 +8,93 @@
 </head>
 <body>
   <main class="page">
-    <section class="primary-panel">
-      <div id="successTick" class="success-tick" aria-hidden="true">
-        <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true">
-          <path d="M5 13l4 4L19 7"></path>
-        </svg>
-        <span>Strong password</span>
-      </div>
+    <h1 class="glitch-title" data-text="Your Password">Your Password</h1>
+    <section class="accordion" aria-label="Password tools">
+      <details class="accordion-item">
+        <summary>Password Strength Checker</summary>
+        <div class="accordion-panel">
+          <section class="primary-panel">
+            <div id="successTick" class="success-tick" aria-hidden="true">
+              <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true">
+                <path d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span>Strong password</span>
+            </div>
 
-      <section class="card">
-        <h1>Password Strength Checker</h1>
-        <p>Check whether a password has enough length, uppercase and lowercase letters, numbers, and special characters.</p>
+            <section class="card">
+              <h1>Password Strength Checker</h1>
+              <p>Check whether a password has enough length, uppercase and lowercase letters, numbers, and special characters.</p>
 
-        <label for="password">Enter a password</label>
-        <div class="input-row">
-          <input id="password" type="password" placeholder="Type your password here" autocomplete="new-password" />
-          <button type="button" onclick="checkPasswordStrength()">Check</button>
+              <label for="password">Enter a password</label>
+              <div class="input-row">
+                <input id="password" type="password" placeholder="Type your password here" autocomplete="new-password" />
+                <button type="button" onclick="checkPasswordStrength(true)">Check</button>
+              </div>
+
+              <section class="result" aria-live="polite">
+                <div id="score" class="score">Password strength: 0/5</div>
+                <ul id="feedback">
+                  <li>At least 8 characters</li>
+                  <li>At least 1 uppercase letter</li>
+                  <li>At least 1 lowercase letter</li>
+                  <li>At least 1 number</li>
+                  <li>At least 1 special character</li>
+                </ul>
+                <div class="hint">Tip: press Enter after typing your password.</div>
+              </section>
+              <div class="credit-line">Pythone code used for this card has been created by <a href="https://github.com/Scott1017/Password-Strength-Checker" target="_blank" rel="noopener noreferrer">Scott Rayner</a></div>
+            </section>
+          </section>
         </div>
+      </details>
 
-        <section class="result" aria-live="polite">
-          <div id="score" class="score">Password strength: 0/5</div>
-          <ul id="feedback">
-            <li>At least 8 characters</li>
-            <li>At least 1 uppercase letter</li>
-            <li>At least 1 lowercase letter</li>
-            <li>At least 1 number</li>
-            <li>At least 1 special character</li>
-          </ul>
-          <div class="hint">Tip: press Enter after typing your password.</div>
-        </section>
-        <div class="credit-line">Pythone code used for this card has been created by <a href="https://github.com/Scott1017/Password-Strength-Checker" target="_blank" rel="noopener noreferrer">Scott Rayner</a></div>
-      </section>
-    </section>
+      <details class="accordion-item">
+        <summary>Password Crack-Time Calculator</summary>
+        <div class="accordion-panel">
+          <section class="card">
+            <h2>Password Crack-Time Calculator</h2>
+            <p>Uses the password above to estimate how long a brute-force attack could take. This is a rough offline estimate.</p>
 
-    <section class="card">
-      <h2>Password Crack-Time Calculator</h2>
-      <p>Uses the password above to estimate how long a brute-force attack could take. This is a rough offline estimate.</p>
+            <div class="crack-output" aria-live="polite">
+              <div id="crackEstimate" class="estimate-value">Enter a password to see an estimate</div>
+              <div id="crackDetails" class="estimate-note">Assumes about 10 billion guesses per second.</div>
+            </div>
+          </section>
+        </div>
+      </details>
 
-      <div class="crack-output" aria-live="polite">
-        <div id="crackEstimate" class="estimate-value">Enter a password to see an estimate</div>
-        <div id="crackDetails" class="estimate-note">Assumes about 10 billion guesses per second.</div>
-      </div>
-    </section>
+      <details class="accordion-item">
+        <summary>Strong Password Generator</summary>
+        <div class="accordion-panel">
+          <section class="card">
+            <h2>Strong Password Generator</h2>
+            <p>Generate a strong random password and copy it with one click.</p>
 
-    <section class="card">
-      <h2>Strong Password Generator</h2>
-      <p>Generate a strong random password and copy it with one click.</p>
+            <div class="control-row">
+              <label for="passwordLength">Length</label>
+              <input id="passwordLength" type="number" min="12" max="32" value="16" />
+              <button type="button" class="secondary-button" onclick="generateStrongPassword()">Generate</button>
+            </div>
 
-      <div class="control-row">
-        <label for="passwordLength">Length</label>
-        <input id="passwordLength" type="number" min="12" max="32" value="16" />
-        <button type="button" class="secondary-button" onclick="generateStrongPassword()">Generate</button>
-      </div>
+            <div class="generate-row">
+              <input id="generatedPassword" type="text" readonly />
+              <button type="button" onclick="copyGeneratedPassword()">Copy</button>
+            </div>
 
-      <div class="generate-row">
-        <input id="generatedPassword" type="text" readonly />
-        <button type="button" onclick="copyGeneratedPassword()">Copy</button>
-      </div>
-
-      <div id="copyStatus" class="copy-status" aria-live="polite"></div>
-      <div class="small-note">Includes uppercase, lowercase, numbers, and symbols.</div>
+            <div id="copyStatus" class="copy-status" aria-live="polite"></div>
+            <div class="small-note">Includes uppercase, lowercase, numbers, and symbols.</div>
+          </section>
+        </div>
+      </details>
     </section>
   </main>
+
+  <footer class="site-footer">
+    <p>
+      Design, HTML, CSS, deploymen by
+      <a href="https://www.linkedin.com/in/katarzyna-opozda/" target="_blank" rel="noopener noreferrer">Katarzyna Opozda</a>
+    </p>
+  </footer>
 
   <script>
     const GUESSES_PER_SECOND = 1e10;
@@ -110,6 +135,36 @@
     const generatedPasswordInput = document.getElementById("generatedPassword");
     const passwordLengthInput = document.getElementById("passwordLength");
     const copyStatusElement = document.getElementById("copyStatus");
+    const accordionItems = Array.from(document.querySelectorAll(".accordion-item"));
+    const crackTimeAccordionItem = accordionItems[1];
+    const glitchTitle = document.querySelector(".glitch-title");
+
+    function initializeHeadingLetterGlitch() {
+      if (!glitchTitle) {
+        return;
+      }
+
+      const titleText = glitchTitle.textContent || "";
+      glitchTitle.textContent = "";
+
+      Array.from(titleText).forEach((character) => {
+        const letterSpan = document.createElement("span");
+        letterSpan.className = "glitch-letter";
+
+        if (character === " ") {
+          letterSpan.classList.add("space");
+          letterSpan.textContent = "\u00A0";
+        } else {
+          letterSpan.textContent = character;
+        }
+
+        const randomDelay = (Math.random() * 2.8).toFixed(3);
+        const randomDuration = (2.7 + Math.random() * 1.8).toFixed(3);
+        letterSpan.style.setProperty("--glitch-delay", `${randomDelay}s`);
+        letterSpan.style.setProperty("--glitch-duration", `${randomDuration}s`);
+        glitchTitle.appendChild(letterSpan);
+      });
+    }
 
     function getCharacterSetSize(password) {
       let charsetSize = 0;
@@ -188,7 +243,7 @@
       crackDetailsElement.textContent = `Based on a ${charsetSize}-character set and about 10 billion guesses per second.`;
     }
 
-    function checkPasswordStrength() {
+    function checkPasswordStrength(shouldOpenCrackTab = false) {
       const password = passwordInput.value;
       let score = 0;
 
@@ -216,6 +271,10 @@
 
       successTick.classList.toggle("visible", score === 5);
       updateCrackEstimate();
+
+      if (shouldOpenCrackTab && password.trim() && crackTimeAccordionItem) {
+        crackTimeAccordionItem.open = true;
+      }
     }
 
     function updatePasswordAnalysis() {
@@ -224,7 +283,7 @@
 
     passwordInput.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
-        checkPasswordStrength();
+        checkPasswordStrength(true);
       }
     });
 
@@ -283,6 +342,7 @@
       }
     }
 
+    initializeHeadingLetterGlitch();
     generateStrongPassword();
     updateCrackEstimate();
     checkPasswordStrength();
