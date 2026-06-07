@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="keyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#22c55e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#16a34a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Key shaft -->
+  <rect x="50" y="85" width="130" height="30" rx="15" fill="url(#keyGradient)" />
+  
+  <!-- Key head (circle) -->
+  <circle cx="70" cy="100" r="35" fill="url(#keyGradient)" />
+  
+  <!-- Key head inner detail -->
+  <circle cx="70" cy="100" r="20" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.4" />
+  
+  <!-- Key teeth -->
+  <rect x="155" y="88" width="12" height="12" fill="url(#keyGradient)" />
+  <rect x="170" y="88" width="12" height="12" fill="url(#keyGradient)" />
+  
+  <!-- Key teeth highlights -->
+  <rect x="155" y="88" width="12" height="6" fill="#4ade80" opacity="0.6" />
+  <rect x="170" y="88" width="12" height="6" fill="#4ade80" opacity="0.6" />
+</svg>
