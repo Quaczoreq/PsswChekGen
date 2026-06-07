@@ -43,7 +43,7 @@
                 </ul>
                 <div class="hint">Tip: press Enter after typing your password.</div>
               </section>
-              <div class="credit-line">Pythone code used for this card has been created by <a href="https://github.com/Scott1017/Password-Strength-Checker" target="_blank" rel="noopener noreferrer">Scott Rayner</a></div>
+              <div class="credit-line">Pythone code used for this card has been created by <a href="https://github.com/Scott1017/Password-Strength-Checker" target="_blank" rel="noopener noreferrer"><span class="typewriter" data-text="Scott Rayner">Scott Rayner</span></a></div>
             </section>
           </section>
         </div>
@@ -343,10 +343,29 @@
       }
     }
 
+    function initializeTypewriter() {
+      const typewriterElements = document.querySelectorAll(".typewriter");
+      typewriterElements.forEach((element) => {
+        const text = element.getAttribute("data-text") || element.textContent;
+        element.textContent = "";
+        element.setAttribute("data-text", text);
+        let index = 0;
+        const interval = setInterval(() => {
+          if (index < text.length) {
+            element.textContent += text[index];
+            index++;
+          } else {
+            clearInterval(interval);
+          }
+        }, 80);
+      });
+    }
+
     initializeHeadingLetterGlitch();
     generateStrongPassword();
     updateCrackEstimate();
     checkPasswordStrength();
+    initializeTypewriter();
   </script>
 </body>
 </html>
